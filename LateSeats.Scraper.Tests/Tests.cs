@@ -47,14 +47,36 @@ namespace LateSeats.Scraper.Tests
         }
 
         [Test]
-        public void Departure_Date_Can_Be_Scraped()
+        public void Departure_Flight_DateTime_Can_Be_Scraped()
         {
             var url = Path.GetFullPath("../../Thomson.htm");
 
             var scraper = new LateSeatsScraper();
             var flights = scraper.Scrape(url);
 
-            Assert.That(flights[0].DepartsOn, Is.EqualTo(new DateTime(2014,08,01,0,0,0,0)));
+            Assert.That(flights[0].DepartsOn, Is.EqualTo(new DateTime(2014, 08, 01, 21, 00, 0, 0)));
+        }
+
+        [Test]
+        public void Return_Flight_DateTime_Can_Be_Scraped()
+        {
+            var url = Path.GetFullPath("../../Thomson.htm");
+
+            var scraper = new LateSeatsScraper();
+            var flights = scraper.Scrape(url);
+
+            Assert.That(flights[0].ReturnsOn, Is.EqualTo(new DateTime(2014, 08, 09, 0, 40, 0, 0)));
+        }
+
+        [Test]
+        public void Number_Of_Nights_Can_Be_Scraped()
+        {
+            var url = Path.GetFullPath("../../Thomson.htm");
+
+            var scraper = new LateSeatsScraper();
+            var flights = scraper.Scrape(url);
+
+            Assert.That(flights[0].NoOfNights, Is.EqualTo(7));   
         }
 
         [Test]
@@ -66,7 +88,7 @@ namespace LateSeats.Scraper.Tests
             var scraper = new LateSeatsScraper();
             var flights = scraper.ScrapeResponse(response as HttpWebResponse);
 
-            Assert.That(flights[0].DepartsOn, Is.EqualTo(new DateTime(2014, 08, 01, 0, 0, 0, 0)));
+            Assert.That(flights[0].DepartsOn, Is.EqualTo(new DateTime(2014, 08, 01, 21, 0, 0, 0)));
             Assert.That(flights[0].DepartureAirport, Is.EqualTo("Manchester"));
             Assert.That(flights[0].Destination, Is.EqualTo("Ibiza"));
         }

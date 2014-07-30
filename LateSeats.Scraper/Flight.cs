@@ -11,5 +11,9 @@ namespace LateSeats.Scraper
         public int SeatsLeft { get; set; }
 
         public DateTime DepartsOn { get; set; }
+
+        public DateTime ReturnsOn { get; set; }
+
+        public int NoOfNights { get; set; }
     }
 }
