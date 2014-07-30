@@ -17,11 +17,11 @@ namespace LateSeats.Scraper.Tests
         {
             //var url = "http://flights.thomson.co.uk/thomson/en-GB/farefinder/default?pageIndex=4&originAirportCode=MAN&destinationAirportCode=anydest&duration=0&flexDate=0&timeSpanStartDay=29&timeSpanStartYearMonth=2014-07&timeSpanEndDay=05&timeSpanEndYearMonth=2014-08";
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
-
+            
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
+            Assert.That(result.Flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
         }
 
         [Test]
@@ -30,9 +30,9 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].DepartureAirport.Name, Is.EqualTo("Manchester"));
+            Assert.That(result.Flights[0].DepartureAirport.Name, Is.EqualTo("Manchester"));
         }
 
         [Test]
@@ -41,10 +41,10 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[1].SeatsLeft, Is.EqualTo(6));
-            Assert.That(flights[5].SeatsLeft, Is.EqualTo(2));
+            Assert.That(result.Flights[1].SeatsLeft, Is.EqualTo(6));
+            Assert.That(result.Flights[5].SeatsLeft, Is.EqualTo(2));
         }
 
         [Test]
@@ -53,20 +53,20 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].ArrivalDate, Is.EqualTo("2014-08-01T21:00:00"));
+            Assert.That(result.Flights[0].ArrivalDate, Is.EqualTo("2014-08-01T21:00:00"));
         }
 
         [Test]
         public void Return_Flight_DateTime_Can_Be_Scraped()
         {
-            var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
+            var stream = File.OpenRead(Path.GetFullPath("../../Thomson2.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].DepartureDate, Is.EqualTo("2014-08-09T00:40:00"));
+            Assert.That(result.Flights[8].DepartureDate, Is.EqualTo("2014-09-09T14:35:00"));
         }
 
         [Test]
@@ -75,9 +75,9 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].NoOfNights, Is.EqualTo(7));
+            Assert.That(result.Flights[0].NoOfNights, Is.EqualTo(7));
         }
 
         [Test]
@@ -86,9 +86,9 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var result = scraper.Scrape(stream);
 
-            Assert.That(flights[0].DepartureAirport.Code, Is.EqualTo("MAN"));
+            Assert.That(result.Flights[0].DepartureAirport.Code, Is.EqualTo("MAN"));
         }
 
         [Test]
@@ -97,9 +97,9 @@ namespace LateSeats.Scraper.Tests
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(stream);
+            var results = scraper.Scrape(stream);
 
-            Assert.That(flights[0].ArrivalAirport.Code, Is.EqualTo("IBZ"));
+            Assert.That(results.Flights[0].ArrivalAirport.Code, Is.EqualTo("IBZ"));
         }
 
         [Test]
@@ -126,6 +126,20 @@ namespace LateSeats.Scraper.Tests
 
             Assert.That(result[0], Is.EqualTo(expected));
         }
+
+        [Test]
+        public void Can_Check_For_More_Pages()
+        {
+            var expected = "/thomson/en-GB/farefinder/default?pageIndex=5&amp;originAirportCode=MAN&amp;destinationAirportCode=anydest&amp;duration=0&amp;flexDate=0&amp;timeSpanStartDay=29&amp;timeSpanStartYearMonth=2014-07&amp;timeSpanEndDay=05&amp;timeSpanEndYearMonth=2014-08";
+
+            var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
+
+            var scraper = new LateSeatsScraper();
+            var scrapeResult = scraper.Scrape(stream);
+            var result = scrapeResult.NextUrl;
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
         [Test]
         public void Smoke_Test()
         {
@@ -133,11 +147,12 @@ namespace LateSeats.Scraper.Tests
             var response = request.GetResponse();
 
             var scraper = new LateSeatsScraper();
-            var flights = scraper.Scrape(response.GetResponseStream());
+            var result = scraper.Scrape(response.GetResponseStream());
 
-            Assert.That(flights[0].ArrivalDate, Is.EqualTo("2014-08-01T21:00:00"));
-            Assert.That(flights[0].DepartureAirport.Name, Is.EqualTo("Manchester"));
-            Assert.That(flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
+            Assert.That(result.Flights[0].ArrivalDate, Is.EqualTo("2014-08-01T21:00:00"));
+            Assert.That(result.Flights[0].DepartureAirport.Name, Is.EqualTo("Manchester"));
+            Assert.That(result.Flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
         }
     }
+
 }
