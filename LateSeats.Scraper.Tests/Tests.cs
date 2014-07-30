@@ -21,7 +21,7 @@ namespace LateSeats.Scraper.Tests
             var scraper = new LateSeatsScraper();
             var flights = scraper.Scrape(stream);
 
-            Assert.That(flights[0].Destination.Name, Is.EqualTo("Ibiza"));
+            Assert.That(flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
         }
 
         [Test]
@@ -81,16 +81,51 @@ namespace LateSeats.Scraper.Tests
         }
 
         [Test]
-        public void Airport_Code_Can_Be_Scraped()
+        public void Departure_Airport_Code_Can_Be_Scraped()
         {
             var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var scraper = new LateSeatsScraper();
             var flights = scraper.Scrape(stream);
 
-            Assert.That(flights[0].AirportCode, Is.EqualTo("MAN"));
+            Assert.That(flights[0].DepartureAirport.Code, Is.EqualTo("MAN"));
         }
 
+        [Test]
+        public void Arrival_Airport_Code_Can_Be_Scraped()
+        {
+            var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
+
+            var scraper = new LateSeatsScraper();
+            var flights = scraper.Scrape(stream);
+
+            Assert.That(flights[0].ArrivalAirport.Code, Is.EqualTo("IBZ"));
+        }
+
+        [Test]
+        public void Elastic_Search_Url_Generated_Correctly()
+        {
+            const string expected = "MIAPMI201407311000";
+
+            var flight = new Flight();
+            flight.ArrivalAirport.Code = "PMI";
+            flight.DepartureAirport.Code = "MIA";
+            flight.DepartureDate = "2014-07-31T10:00:00";
+
+            var result = flight.GenerateFlightId();
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Able_To_Query_Thomson_For_Todays_Flights()
+        {
+            const string expected = "timeSpanStartDay=30&timeSpanStartYearMonth=2014-07&timeSpanEndDay=06&timeSpanEndYearMonth=2014-08";
+
+            var result = new ThomsonQueryBuilder().GetQueries(DateTime.Now, 7);
+
+            Assert.That(result[0], Is.EqualTo(expected));
+        }
         [Test]
         public void Smoke_Test()
         {
@@ -102,7 +137,7 @@ namespace LateSeats.Scraper.Tests
 
             Assert.That(flights[0].ArrivalDate, Is.EqualTo("2014-08-01T21:00:00"));
             Assert.That(flights[0].DepartureAirport.Name, Is.EqualTo("Manchester"));
-            Assert.That(flights[0].Destination.Name, Is.EqualTo("Ibiza"));
+            Assert.That(flights[0].ArrivalAirport.Name, Is.EqualTo("Ibiza"));
         }
     }
 }

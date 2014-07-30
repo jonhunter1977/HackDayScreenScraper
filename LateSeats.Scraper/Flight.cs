@@ -7,7 +7,7 @@ namespace LateSeats.Scraper
     public class Flight
     {
         [DataMember(Name = "destination_airport")]
-        public Airport Destination { get; set; }
+        public Airport ArrivalAirport { get; set; }
 
         [DataMember(Name = "departure_airport")]
         public Airport DepartureAirport { get; set; }
@@ -21,26 +21,31 @@ namespace LateSeats.Scraper
         [DataMember(Name = "departure_date")]
         public string DepartureDate { get; set; }
 
-        [DataMember(Name="nights")]
+        [DataMember(Name = "nights")]
         public int NoOfNights { get; set; }
-
-        [DataMember(Name = "code")]
-        public string AirportCode { get; set; }
-
+        
         public Flight()
         {
-            Destination = new Airport();
+            ArrivalAirport = new Airport();
             DepartureAirport = new Airport();
         }
 
-        public class Airport
+        public string GenerateFlightId()
         {
-            [DataMember(Name = "code")]
-            public string Code { get; set; }
-
-            [DataMember(Name = "name")]
-            public string Name { get; set; }
+            var depDate = DateTime.Parse(DepartureDate);
+            var id = DepartureAirport.Code + ArrivalAirport.Code + depDate.ToString("yyyyMMddHHmm");
+            return id;
         }
+    }
+
+    [DataContract]
+    public class Airport
+    {
+        [DataMember(Name = "code")]
+        public string Code { get; set; }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
     }
 }
 

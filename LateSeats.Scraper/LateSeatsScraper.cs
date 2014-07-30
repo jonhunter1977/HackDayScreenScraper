@@ -24,19 +24,19 @@ namespace LateSeats.Scraper
                           let departFlightTime = row.ChildNodes[7].SelectSingleNode("ul/li/ul/li").InnerText
                           let returnFlightTime = row.ChildNodes[7].SelectSingleNode("ul/li/ul/li[position()>1]").InnerText
                           let noOfNights = row.ChildNodes[9].InnerText
-                          let airportCode = row.ChildNodes[13].SelectSingleNode("fieldset/input[@id='depAP']").GetAttributeValue("value","N/a")
+                          let departureAirportCode = row.ChildNodes[13].SelectSingleNode("fieldset/input[@id='depAP']").GetAttributeValue("value","N/a")
+                          let arrivalAirportCode = row.ChildNodes[13].SelectSingleNode("fieldset/input[@id='retAP']").GetAttributeValue("value", "N/a")
                           let seats = row.SelectSingleNode("td[@class='seatsLeft']").ChildNodes.Count > 2
                                   ? row.SelectSingleNode("td[@class='seatsLeft']/div").InnerText
                                   : "0"
                           select new Flight
                               {
-                                  DepartureAirport = new Flight.Airport() { Code = null, Name = departureAirport },
-                                  Destination = new Flight.Airport() { Code = null, Name = destination },
+                                  DepartureAirport = new Airport() { Code = departureAirportCode, Name = departureAirport },
+                                  ArrivalAirport = new Airport() { Code = arrivalAirportCode, Name = destination },
                                   ArrivalDate = DateTime.Parse(departureDate + " " + departFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
                                   SeatsLeft = IntHelper.ToInt32(seats),
                                   DepartureDate = DateTime.Parse(returnDate + " " + returnFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
-                                  NoOfNights = IntHelper.ToInt32(noOfNights),
-                                  AirportCode = airportCode
+                                  NoOfNights = IntHelper.ToInt32(noOfNights)
                               };
             return flights;
         }
@@ -60,7 +60,7 @@ namespace LateSeats.Scraper
             {
                 var jsonFlight = SerializeJSon(flight);
 
-                var webRequest = WebRequest.Create("http://10.44.35.21:9200/lateseats/flight/MIAPMI201407311000");
+                var webRequest = WebRequest.Create("http://10.44.35.21:9200/lateseats/flight/" + flight.GenerateFlightId());
                 webRequest.Method = "POST";
 
                 using (var requestStream = webRequest.GetRequestStream())
