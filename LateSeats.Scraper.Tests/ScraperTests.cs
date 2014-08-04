@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using LateFlights.Scraper;
 using LateSeats.Scraper.Tests.Fakes;
 using NUnit.Framework;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace LateSeats.Scraper.Tests
     [TestFixture]
     public class ScraperTests
     {
-        public LateFlightsScraper ClassUnderTest
+        public ThomsonScraper ClassUnderTest
         {
             get
             {
-                return new LateFlightsScraper(new FakeWebRequestFactory(), new LateFlightsParser(), new ElasticSearchWriter());
+                return new ThomsonScraper(new FakeWebRequestFactory(), new ThomsonHtmlParser(), new ElasticSearchWriter());
             }
         }
 
@@ -95,7 +96,6 @@ namespace LateSeats.Scraper.Tests
             var results = ClassUnderTest.Scrape(stream);
 
             Assert.That(results.Flights[0].ArrivalAirport.Code, Is.EqualTo("IBZ"));
-            Assert.True(results.Flights.Any(x => x.ArrivalAirport.Code == "SFB"));
         }
 
         [Test]

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LateSeats.Scraper", "LateSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LateSeats.Scraper.Tests", "LateSeats.Scraper.Tests\LateSeats.Scraper.Tests.csproj", "{9FB30158-749D-460F-97AC-C5014E33E7B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LateSeats.Scraper.Runner", "LateSeats.Scraper.Runner\LateSeats.Scraper.Runner.csproj", "{B9CC7242-EAF0-4F59-A056-C81E6927727A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{9FB30158-749D-460F-97AC-C5014E33E7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FB30158-749D-460F-97AC-C5014E33E7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FB30158-749D-460F-97AC-C5014E33E7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9CC7242-EAF0-4F59-A056-C81E6927727A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9CC7242-EAF0-4F59-A056-C81E6927727A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9CC7242-EAF0-4F59-A056-C81E6927727A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9CC7242-EAF0-4F59-A056-C81E6927727A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
