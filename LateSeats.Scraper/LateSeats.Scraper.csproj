@@ -39,20 +39,17 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Airport.cs" />
     <Compile Include="ElasticSearchWriter.cs" />
     <Compile Include="Exceptions\ElasticSearchException.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="IElasticSearchWriter.cs" />
     <Compile Include="ILateFlightScraper.cs" />
     <Compile Include="ILateFlightsParser.cs" />
-    <Compile Include="IntHelper.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="IWebRequestFactory.cs" />
     <Compile Include="IWebRequestWrapper.cs" />
     <Compile Include="ThomsonHtmlParser.cs" />

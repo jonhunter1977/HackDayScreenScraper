@@ -6,5 +6,13 @@ namespace LateSeats.Scraper.Tests.Fakes
         {
             return new FakeWebRequestWrapper();
         }
+
+        public IWebRequestWrapper Create(string url, string method)
+        {
+            return new FakeWebRequestWrapper()
+                {
+                    Method = method
+                };
+        }
     }
 }

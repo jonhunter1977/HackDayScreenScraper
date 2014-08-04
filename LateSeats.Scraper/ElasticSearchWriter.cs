@@ -14,16 +14,11 @@ namespace LateFlights.Scraper
         {
             foreach (var flight in flights)
             {
-                var jsonFlight = SerializeJSon(flight);
-
-                var webRequest = webRequestFactory.Create("http://10.44.35.21:9200/lateseats/flight/" + flight.GenerateFlightId());
-                webRequest.Method = "POST";
+                var webRequest = webRequestFactory.Create("http://10.44.35.21:9200/lateseats/objectToWrite/" + flight.GenerateFlightId(), "POST");
 
                 using (var requestStream = webRequest.GetRequestStream())
                 {
-                    var buffer = Encoding.UTF8.GetBytes(jsonFlight);
-                    requestStream.Write(buffer, 0, buffer.Length);
-                    requestStream.Close();
+                    WriteToStream(flight, requestStream);
                     try
                     {
                         using (var response = webRequest.GetResponse())
@@ -33,20 +28,34 @@ namespace LateFlights.Scraper
                     }
                     catch (WebException e)
                     {
-                        throw new ElasticSearchException("Unable to connect to Elastic Search", e);
+                        throw new ElasticSearchException("Unable to connect to Elastic Search, call Steve!", e);
                     }
                 }
             }
         }
 
-        public static string SerializeJSon<T>(T t)
+        private static void WriteToStream<T>(T objectToWrite, Stream requestStream)
+        {
+            var buffer = GetJsonBytes(objectToWrite);
+            requestStream.Write(buffer, 0, buffer.Length);
+            requestStream.Close();
+        }
+
+        private static byte[] GetJsonBytes<T>(T obj)
+        {
+            var jsonFlight = SerializeJSon(obj);
+            var buffer = Encoding.UTF8.GetBytes(jsonFlight);
+            return buffer;
+        }
+
+        public static string SerializeJSon<T>(T obj)
         {
             string jsonString;
             using (var stream = new MemoryStream())
             {
                 var ds = new DataContractJsonSerializer(typeof(T));
 
-                ds.WriteObject(stream, t);
+                ds.WriteObject(stream, obj);
 
                 jsonString = Encoding.UTF8.GetString(stream.ToArray());
 

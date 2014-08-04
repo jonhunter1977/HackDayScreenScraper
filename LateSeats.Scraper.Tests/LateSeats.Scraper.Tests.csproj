@@ -67,7 +67,6 @@
   <ItemGroup>
     <Content Include="ThomsonDepartureAirports.htm" />
     <Content Include="Thomson.htm" />
-    <Content Include="Thomson2.htm" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

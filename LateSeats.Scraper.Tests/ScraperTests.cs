@@ -61,11 +61,11 @@ namespace LateSeats.Scraper.Tests
         [Test]
         public void Return_Flight_DateTime_Can_Be_Scraped()
         {
-            var stream = File.OpenRead(Path.GetFullPath("../../Thomson2.htm"));
+            var stream = File.OpenRead(Path.GetFullPath("../../Thomson.htm"));
 
             var result = ClassUnderTest.Scrape(stream);
 
-            Assert.That(result.Flights[8].DepartureDate, Is.EqualTo("2014-09-09T14:35:00"));
+            Assert.That(result.Flights[8].DepartureDate, Is.EqualTo("2014-08-18T02:45:00"));
         }
 
         [Test]

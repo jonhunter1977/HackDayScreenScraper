@@ -65,6 +65,7 @@ namespace LateSeats.Scraper.Runner
         private static ScrapeResult Scrape(ILateFlightScraper scraper, IWebRequestFactory requestFactory, string url)
         {
             var webRequest = requestFactory.Create(url.Replace("&amp;", "&"));
+            
             var response = webRequest.GetResponse();
 
             var scrapeResult = scraper.Scrape(response.GetResponseStream());

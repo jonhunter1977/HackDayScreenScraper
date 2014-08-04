@@ -6,7 +6,15 @@ namespace LateSeats.Scraper
     {
         public IWebRequestWrapper Create(string s)
         {
-            return new WebRequestWrapper(WebRequest.Create(s));
+            var wrapper = new WebRequestWrapper(WebRequest.Create(s));
+            return wrapper;
+        }
+
+        public IWebRequestWrapper Create(string url, string method)
+        {
+            var wrapper = Create(url);
+            wrapper.Method = method;
+            return wrapper;
         }
     }
 }

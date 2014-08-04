@@ -32,20 +32,8 @@ namespace LateSeats.Scraper
 
         public string GenerateFlightId()
         {
-            var depDate = DateTime.Parse(DepartureDate);
-            var id = DepartureAirport.Code + ArrivalAirport.Code + depDate.ToString("yyyyMMddHHmm");
-            return id;
+            return DepartureAirport.Code + ArrivalAirport.Code + DateTime.Parse(DepartureDate).ToString("yyyyMMddHHmm");
         }
-    }
-
-    [DataContract]
-    public class Airport
-    {
-        [DataMember(Name = "code")]
-        public string Code { get; set; }
-
-        [DataMember(Name = "name")]
-        public string Name { get; set; }
     }
 }
 

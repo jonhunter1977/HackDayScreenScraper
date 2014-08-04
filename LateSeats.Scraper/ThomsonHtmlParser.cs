@@ -32,10 +32,10 @@ namespace LateSeats.Scraper
                           {
                               DepartureAirport = new Airport { Code = departureAirportCode, Name = departureAirport },
                               ArrivalAirport = new Airport { Code = arrivalAirportCode, Name = destination },
-                              ArrivalDate = DateTime.Parse(departureDate + " " + departFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
-                              SeatsLeft = IntHelper.ToInt32(seats),
-                              DepartureDate = DateTime.Parse(returnDate + " " + returnFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
-                              NoOfNights = IntHelper.ToInt32(noOfNights)
+                              ArrivalDate = (departureDate + " " + departFlightTime + ":00").ToFormattedDateString(),
+                              SeatsLeft = seats.ToInt32(),
+                              DepartureDate =(returnDate + " " + returnFlightTime + ":00").ToFormattedDateString(),
+                              NoOfNights = noOfNights.ToInt32()
                           };
 
             return flights.ToList();

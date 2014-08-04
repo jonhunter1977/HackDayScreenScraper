@@ -2,6 +2,6 @@
 {
     public interface IWebRequestFactory
     {
-        IWebRequestWrapper Create(string s);
+        IWebRequestWrapper Create(string url, string method = "GET");
     }
 }
