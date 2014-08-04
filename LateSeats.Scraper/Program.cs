@@ -1,50 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using LateSeats.Scraper.Exceptions;
 
 namespace LateSeats.Scraper
 {
     public class Program
     {
+        private const string FlightUrl = "http://flights.thomson.co.uk/thomson/en-GB/farefinder/default?pageIndex=1&originAirportCode={0}&destinationAirportCode=anydest&duration=0&flexDate=0&{1}";
+
         public static void Main(string[] args)
         {
-            var scraper = new LateSeatsScraper();
+            var startTime = DateTime.Now;
+            var requestFactory = new WebRequestFactory();
+            var scraper = new LateFlightsScraper(requestFactory, new LateFlightsParser(), new ElasticSearchWriter());
             var pagesScraped = 0;
-            foreach (var query in new ThomsonQueryBuilder().GetQueries(DateTime.Now, 30))
+            var elasticSearchErrorEncountered = false;
+
+            foreach (var departureAirport in ScrapeDepartureAirports(scraper, requestFactory))
             {
-                var url = "http://flights.thomson.co.uk/thomson/en-GB/farefinder/default?pageIndex=1&originAirportCode=MAN&destinationAirportCode=anydest&duration=0&flexDate=0&" + query;
-
-                while (url != null)
+                Console.WriteLine("Finding flights from {0}", departureAirport);
+                foreach (var query in new ThomsonQueryBuilder().GetFlightQueries(DateTime.Now, 7))
                 {
-                    var webRequest = WebRequest.Create(url.Replace("&amp;", "&"));
+                    if (elasticSearchErrorEncountered)
+                        break;
 
-                    var response = webRequest.GetResponse();
-
-                    var scrapeResult = scraper.Scrape(response.GetResponseStream());
-                    pagesScraped++;
-
-                    if (scrapeResult.NextUrl == null)
-                        url = null;
-                    else
-                        url = "http://flights.thomson.co.uk" + scrapeResult.NextUrl;
-
-                    foreach (var flight in scrapeResult.Flights)
+                    var url = string.Format(FlightUrl, departureAirport, query);
+                    Console.WriteLine("Scraping {0}", url);
+                    
+                    while (url != null)
                     {
-                        Console.WriteLine(flight.DepartureAirport.Name + ", " + flight.ArrivalAirport.Name + ", " +
-                                          flight.ArrivalDate + ", " + flight.DepartureDate + ", " + flight.SeatsLeft +
-                                          ", " + flight.DepartureAirport.Code + ", " + flight.ArrivalAirport.Code);
-                    }
+                        try
+                        {
+                            var scrapeResult = Scrape(scraper, requestFactory, url);
 
-                    File.AppendAllText("C://urls.txt", url);
+                            url = GetNextUrl(scrapeResult);
+
+                            pagesScraped++;
+                        }
+                        catch (ElasticSearchException e)
+                        {
+                            Console.WriteLine(e.Message);
+                            elasticSearchErrorEncountered = true;
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
+                    }
+                    pagesScraped = 0;
                 }
             }
 
             Console.WriteLine(pagesScraped + " pages scraped");
+
+            Console.WriteLine("Ran in " + (startTime - DateTime.Now).ToString("hh:mm:ss"));
             Console.ReadKey();
+        }
+
+        private static string GetNextUrl(ScrapeResult scrapeResult)
+        {
+            return scrapeResult.NextUrl == null ? null : "http://flights.thomson.co.uk" + scrapeResult.NextUrl;
+        }
+
+        private static ScrapeResult Scrape(LateFlightsScraper scraper, IWebRequestFactory requestFactory, string url)
+        {
+            var webRequest = requestFactory.Create(url.Replace("&amp;", "&"));
+            var response = webRequest.GetResponse();
+
+            var scrapeResult = scraper.Scrape(response.GetResponseStream());
+
+            return scrapeResult;
+        }
+
+        private static IEnumerable<string> ScrapeDepartureAirports(LateFlightsScraper scraper, IWebRequestFactory requestFactory)
+        {
+            return scraper.ScrapeDepartureAirports(requestFactory.Create("http://flights.thomson.co.uk/en/index.html").GetResponseStream());
         }
     }
 }

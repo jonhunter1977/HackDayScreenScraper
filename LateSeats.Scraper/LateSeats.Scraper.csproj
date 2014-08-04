@@ -46,11 +46,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElasticSearchWriter.cs" />
+    <Compile Include="Exceptions\ElasticSearchException.cs" />
     <Compile Include="Flight.cs" />
-    <Compile Include="LateSeatsScraper.cs" />
+    <Compile Include="IElasticSearchWriter.cs" />
+    <Compile Include="ILateFlightsParser.cs" />
+    <Compile Include="IntHelper.cs" />
+    <Compile Include="IWebRequestFactory.cs" />
+    <Compile Include="IWebRequestWrapper.cs" />
+    <Compile Include="LateFlightsParser.cs" />
+    <Compile Include="LateFlightsScraper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScrapeResult.cs" />
     <Compile Include="ThomsonQueryBuilder.cs" />
+    <Compile Include="WebRequestFactory.cs" />
+    <Compile Include="WebRequestWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

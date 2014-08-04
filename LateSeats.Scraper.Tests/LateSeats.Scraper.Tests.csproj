@@ -45,8 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tests.cs" />
+    <Compile Include="ElasticSearchTests.cs" />
+    <Compile Include="Fakes\FakeHttpWebResponse.cs" />
+    <Compile Include="Fakes\FakeWebRequestFactory.cs" />
+    <Compile Include="Fakes\FakeWebRequestWrapper.cs" />
+    <Compile Include="ScraperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThomsonQueryBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -60,8 +65,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Request.txt" />
+    <Content Include="ThomsonDepartureAirports.htm" />
     <Content Include="Thomson.htm" />
+    <Content Include="Thomson2.htm" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

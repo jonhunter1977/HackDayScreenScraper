@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using HtmlAgilityPack;
+
+namespace LateSeats.Scraper
+{
+    public class ThomsonHtmlParser : ILateFlightsParser
+    {
+        public IList<Flight> ParseFlights(HtmlNode documentNode)
+        {
+            var element = documentNode.SelectNodes("//table[@class='resultTable dealsResults']/tbody//tr[position()>1]");
+
+            IEnumerable<Flight> flights = new List<Flight>();
+
+            if (element == null)
+                return flights.ToList();
+
+            flights = from row in element
+                      where row.HasChildNodes
+                      let departureAirport = row.ChildNodes[1].InnerText
+                      let destination = row.ChildNodes[3].InnerText
+                      let departureDate = row.ChildNodes[5].SelectSingleNode("ul/li").InnerText
+                      let returnDate = row.ChildNodes[5].SelectSingleNode("ul/li[position()>1]").InnerText
+                      let departFlightTime = row.ChildNodes[7].SelectSingleNode("ul/li/ul/li").InnerText
+                      let returnFlightTime = row.ChildNodes[7].SelectSingleNode("ul/li[position()>1]/ul/li").InnerText
+                      let noOfNights = row.ChildNodes[9].InnerText
+                      let departureAirportCode = row.ChildNodes[13].SelectSingleNode("fieldset/input[@id='depAP']").GetAttributeValue("value", "N/a")
+                      let arrivalAirportCode = row.ChildNodes[13].SelectSingleNode("fieldset/input[@id='retAP']").GetAttributeValue("value", "N/a")
+                      let seats = row.SelectSingleNode("td[@class='seatsLeft']").ChildNodes.Count > 2 ? row.SelectSingleNode("td[@class='seatsLeft']/div").InnerText : "0"
+                      select new Flight
+                          {
+                              DepartureAirport = new Airport { Code = departureAirportCode, Name = departureAirport },
+                              ArrivalAirport = new Airport { Code = arrivalAirportCode, Name = destination },
+                              ArrivalDate = DateTime.Parse(departureDate + " " + departFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
+                              SeatsLeft = IntHelper.ToInt32(seats),
+                              DepartureDate = DateTime.Parse(returnDate + " " + returnFlightTime + ":00").ToString("yyyy-MM-ddTHH:mm:ss"),
+                              NoOfNights = IntHelper.ToInt32(noOfNights)
+                          };
+
+            return flights.ToList();
+        }
+
+        public List<string> ParseDepartureAirports(HtmlNode documentNode)
+        {
+            var element = documentNode.SelectNodes("//select[@id='depAP']/option[position()>1]");
+
+            var airportCodes = from codeElement in element
+                               let code = codeElement.GetAttributeValue("value", "")
+                               where code != "none"
+                               select code;
+
+            return airportCodes.ToList();
+        }
+
+        public string ParseNextUrl(HtmlNode documentNode)
+        {
+            var pagers = documentNode.SelectNodes("//a[@class='qPager']");
+
+            if (pagers == null)
+                return null;
+
+            var elements = (from pager in pagers
+                           where pager.InnerText == "Next"
+                           select pager).ToList();
+
+            return !elements.Any() ? null : elements.ElementAt(0).GetAttributeValue("href", null);
+        }
+    }
+}
