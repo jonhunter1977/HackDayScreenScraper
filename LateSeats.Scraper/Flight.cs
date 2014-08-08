@@ -32,7 +32,7 @@ namespace LateSeats.Scraper
 
         public string GenerateFlightId()
         {
-            return DepartureAirport.Code + ArrivalAirport.Code + DateTime.Parse(DepartureDate).ToString("yyyyMMddHHmm");
+            return DepartureAirport.Code + ArrivalAirport.Code + DateTime.Parse(ArrivalDate).ToString("yyyyMMddHHmm");
         }
     }
 }

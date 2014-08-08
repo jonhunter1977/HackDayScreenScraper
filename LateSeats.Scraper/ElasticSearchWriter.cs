@@ -14,7 +14,7 @@ namespace LateFlights.Scraper
         {
             foreach (var flight in flights)
             {
-                var webRequest = webRequestFactory.Create("http://10.44.35.21:9200/lateseats/objectToWrite/" + flight.GenerateFlightId(), "POST");
+                var webRequest = webRequestFactory.Create("http://10.44.35.21:9200/lateseats/flight/" + flight.GenerateFlightId(), "POST");
 
                 using (var requestStream = webRequest.GetRequestStream())
                 {
