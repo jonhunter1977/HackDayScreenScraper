@@ -3,7 +3,7 @@ using System.IO;
 
 namespace LateSeats.Scraper
 {
-    public interface ILateFlightScraper
+    public interface ILateFlightsScraper
     {
         ScrapeResult Scrape(Stream stream);
         IList<string> ScrapeDepartureAirports(Stream stream);

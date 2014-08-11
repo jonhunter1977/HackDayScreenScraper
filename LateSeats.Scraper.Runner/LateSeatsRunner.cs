@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using LateFlights.Scraper;
 using LateSeats.Scraper.Exceptions;
 
 namespace LateSeats.Scraper.Runner
@@ -54,7 +53,7 @@ namespace LateSeats.Scraper.Runner
 
             Console.WriteLine(pagesScraped + " pages scraped");
 
-            Console.WriteLine("Ran in " + (startTime - DateTime.Now).ToString("hh:mm:ss"));
+            Console.WriteLine("Ran in " + (DateTime.Now - startTime));
         }
 
         private static string GetNextUrl(ScrapeResult scrapeResult)
@@ -62,7 +61,7 @@ namespace LateSeats.Scraper.Runner
             return scrapeResult.NextUrl == null ? null : "http://flights.thomson.co.uk" + scrapeResult.NextUrl;
         }
 
-        private static ScrapeResult Scrape(ILateFlightScraper scraper, IWebRequestFactory requestFactory, string url)
+        private static ScrapeResult Scrape(ILateFlightsScraper scraper, IWebRequestFactory requestFactory, string url)
         {
             var webRequest = requestFactory.Create(url.Replace("&amp;", "&"));
             
@@ -73,7 +72,7 @@ namespace LateSeats.Scraper.Runner
             return scrapeResult;
         }
 
-        private static IEnumerable<string> ScrapeDepartureAirports(ILateFlightScraper scraper, IWebRequestFactory requestFactory)
+        private static IEnumerable<string> ScrapeDepartureAirports(ILateFlightsScraper scraper, IWebRequestFactory requestFactory)
         {
             return scraper.ScrapeDepartureAirports(requestFactory.Create("http://flights.thomson.co.uk/en/index.html").GetResponseStream());
         }

@@ -36,7 +36,7 @@ namespace LateSeats.Scraper
 
         public Stream GetResponseStream()
         {
-            return this.GetResponse().GetResponseStream();
+            return GetResponse().GetResponseStream();
         }
     }
 }

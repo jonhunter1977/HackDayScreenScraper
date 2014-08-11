@@ -3,10 +3,9 @@ using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using LateSeats.Scraper;
 using LateSeats.Scraper.Exceptions;
 
-namespace LateFlights.Scraper
+namespace LateSeats.Scraper
 {
     public class ElasticSearchWriter : IElasticSearchWriter
     {

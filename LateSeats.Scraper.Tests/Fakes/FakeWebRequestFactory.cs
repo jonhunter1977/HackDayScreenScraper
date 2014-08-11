@@ -9,10 +9,7 @@ namespace LateSeats.Scraper.Tests.Fakes
 
         public IWebRequestWrapper Create(string url, string method)
         {
-            return new FakeWebRequestWrapper()
-                {
-                    Method = method
-                };
+            return new FakeWebRequestWrapper { Method = method };
         }
     }
 }

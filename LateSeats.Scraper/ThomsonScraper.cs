@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 
 namespace LateSeats.Scraper
 {
-    public class ThomsonScraper : ILateFlightScraper
+    public class ThomsonScraper : ILateFlightsScraper
     {
         private readonly IWebRequestFactory _webRequestFactory;
         private readonly ILateFlightsParser _lateFlightsParser;

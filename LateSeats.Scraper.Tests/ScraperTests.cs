@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using LateFlights.Scraper;
 using LateSeats.Scraper.Tests.Fakes;
 using NUnit.Framework;
 using System.Linq;

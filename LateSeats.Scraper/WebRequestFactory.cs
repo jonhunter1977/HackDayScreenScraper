@@ -4,16 +4,9 @@ namespace LateSeats.Scraper
 {
     public class WebRequestFactory : IWebRequestFactory
     {
-        public IWebRequestWrapper Create(string s)
+        public IWebRequestWrapper Create(string url, string method = "GET")
         {
-            var wrapper = new WebRequestWrapper(WebRequest.Create(s));
-            return wrapper;
-        }
-
-        public IWebRequestWrapper Create(string url, string method)
-        {
-            var wrapper = Create(url);
-            wrapper.Method = method;
+            var wrapper = new WebRequestWrapper(WebRequest.Create(url)) { Method = method };
             return wrapper;
         }
     }

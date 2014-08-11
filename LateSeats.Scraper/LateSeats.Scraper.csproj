@@ -47,7 +47,7 @@
     <Compile Include="Exceptions\ElasticSearchException.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="IElasticSearchWriter.cs" />
-    <Compile Include="ILateFlightScraper.cs" />
+    <Compile Include="ILateFlightsScraper.cs" />
     <Compile Include="ILateFlightsParser.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IWebRequestFactory.cs" />
