@@ -14,7 +14,7 @@ namespace LateSeats.Scraper.Tests
                 {
                     ArrivalAirport = { Code = "PMI" },
                     DepartureAirport = { Code = "MIA" },
-                    DepartureDate = "2014-07-31T10:00:00"
+                    ArrivalDate = "2014-07-31T10:00:00"
                 };
 
             var result = flight.GenerateFlightId();
