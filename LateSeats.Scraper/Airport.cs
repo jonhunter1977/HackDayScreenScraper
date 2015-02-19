@@ -10,5 +10,10 @@ namespace LateSeats.Scraper
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
+
+        public string GenerateAirportId()
+        {
+            return Code;
+        }
     }
 }

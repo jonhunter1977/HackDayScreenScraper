@@ -120,7 +120,8 @@ namespace LateSeats.Scraper.Tests
             var departureResult = ClassUnderTest.ScrapeDepartureAirports(stream);
 
             Assert.True(departureResult.Count > 0);
-            Assert.That(departureResult[0], Is.EqualTo(expected));
+            Assert.That(departureResult[0].Code, Is.EqualTo(expected));
+            Assert.That(departureResult[0].Name, Is.EqualTo("Aberdeen (ABZ)"));
         }
     }
 }

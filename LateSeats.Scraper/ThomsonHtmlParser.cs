@@ -34,21 +34,22 @@ namespace LateSeats.Scraper
                               ArrivalAirport = new Airport { Code = arrivalAirportCode, Name = destination },
                               ArrivalDate = (departureDate + " " + departFlightTime + ":00").ToFormattedDateString(),
                               SeatsLeft = seats.ToInt32(),
-                              DepartureDate =(returnDate + " " + returnFlightTime + ":00").ToFormattedDateString(),
+                              DepartureDate = (returnDate + " " + returnFlightTime + ":00").ToFormattedDateString(),
                               NoOfNights = noOfNights.ToInt32()
                           };
 
             return flights.ToList();
         }
 
-        public List<string> ParseDepartureAirports(HtmlNode documentNode)
+        public List<Airport> ParseDepartureAirports(HtmlNode documentNode)
         {
             var element = documentNode.SelectNodes("//select[@id='depAP']/option[position()>1]");
 
             var airportCodes = from codeElement in element
                                let code = codeElement.GetAttributeValue("value", "")
+                               let name = codeElement.NextSibling.InnerText.Trim()
                                where code != "none"
-                               select code;
+                               select new Airport() { Name = name, Code = code };
 
             return airportCodes.ToList();
         }
@@ -61,8 +62,8 @@ namespace LateSeats.Scraper
                 return null;
 
             var elements = (from pager in pagers
-                           where pager.InnerText == "Next"
-                           select pager).ToList();
+                            where pager.InnerText == "Next"
+                            select pager).ToList();
 
             return !elements.Any() ? null : elements.ElementAt(0).GetAttributeValue("href", null);
         }

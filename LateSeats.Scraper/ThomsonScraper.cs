@@ -16,7 +16,7 @@ namespace LateSeats.Scraper
             _lateFlightsParser = lateFlightsParser;
             _elasticSearchWriter = elasticSearchWriter;
         }
-        
+
         public ScrapeResult Scrape(Stream stream)
         {
             var scrapeResult = new ScrapeResult();
@@ -32,13 +32,17 @@ namespace LateSeats.Scraper
             return scrapeResult;
         }
 
-        public IList<string> ScrapeDepartureAirports(Stream stream)
+        public IList<Airport> ScrapeDepartureAirports(Stream stream)
         {
             var doc = new HtmlDocument();
 
             doc.Load(stream);
 
-            return _lateFlightsParser.ParseDepartureAirports(doc.DocumentNode);
+            var departureAirports = _lateFlightsParser.ParseDepartureAirports(doc.DocumentNode);
+
+            _elasticSearchWriter.Post(departureAirports, _webRequestFactory);
+
+            return departureAirports;
         }
     }
 }

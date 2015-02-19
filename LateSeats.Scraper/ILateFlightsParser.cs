@@ -7,7 +7,7 @@ namespace LateSeats.Scraper
     {
         IList<Flight> ParseFlights(HtmlNode documentNode);
 
-        List<string> ParseDepartureAirports(HtmlNode documentNode);
+        List<Airport> ParseDepartureAirports(HtmlNode documentNode);
 
         string ParseNextUrl(HtmlNode documentNode);
     }

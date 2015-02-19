@@ -6,6 +6,6 @@ namespace LateSeats.Scraper
     public interface ILateFlightsScraper
     {
         ScrapeResult Scrape(Stream stream);
-        IList<string> ScrapeDepartureAirports(Stream stream);
+        IList<Airport> ScrapeDepartureAirports(Stream stream);
     }
 }

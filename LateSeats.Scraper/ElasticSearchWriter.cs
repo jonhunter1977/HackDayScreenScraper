@@ -33,6 +33,29 @@ namespace LateSeats.Scraper
             }
         }
 
+        public void Post(IEnumerable<Airport> airports, IWebRequestFactory webRequestFactory)
+        {
+            foreach (var airport in airports)
+            {
+                var webRequest = webRequestFactory.Create("http://10.44.35.21:9200/lateseats/airport/" + airport.GenerateAirportId(), "POST");
+
+                using (var requestStream = webRequest.GetRequestStream())
+                {
+                    WriteToStream(airport, requestStream);
+                    try
+                    {
+                        using (var response = webRequest.GetResponse())
+                        {
+                            response.Close();
+                        }
+                    }
+                    catch (WebException e)
+                    {
+                        throw new ElasticSearchException("Unable to connect to Elastic Search, call Steve!", e);
+                    }
+                }
+            }
+        }
         private static void WriteToStream<T>(T objectToWrite, Stream requestStream)
         {
             var buffer = GetJsonBytes(objectToWrite);
